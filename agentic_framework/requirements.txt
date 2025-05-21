@@ -1,0 +1,12 @@
+# Core dependencies
+pydantic>=2.0.0
+python-dotenv>=1.0.0
+
+# LLM providers
+openai>=1.0.0
+langchain-groq>=0.1.0
+azure-ai-inference>=1.0.0
+azure-core>=1.0.0
+
+# Optional dependencies
+pyyaml>=6.0.0  # For YAML parsing
