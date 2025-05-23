@@ -1,13 +1,3 @@
-"""
-Real-world usage example of the Agentic Framework.
-
-This example demonstrates how to create and use agents for a simple task:
-1. A summarization agent that summarizes text
-2. A sentiment analysis agent that analyzes the sentiment of text
-
-This example uses the meta-llama/Llama-3.3-70B-Instruct-Turbo model with deepinfra as the provider.
-"""
-
 import os
 import re
 from typing import Dict, List, Any
@@ -249,8 +239,19 @@ def main():
     
     # Example of batch processing with a list of people
     people = ["Virat kohli", "Naga Chaitanya", "Mukesh Ambani"]
-    prompt_template = "What is the father's name of {person}?"
+    prompt_template = "What is the father's name of {person} and his {surname}?"
+
+    my_dict = {
+        "person" : ["Virat kohli", "Naga Chaitanya", "Mukesh Ambani"],
+        "surname" : ["Kohli", "Akkineni", "Ambani"]
+    }
     
+    # There could be combinations
+    # 1. All combinations
+    # 2. One one mapping
+    # 3. random sampling
+
+
     # Create a simple agent for answering questions
     qa_agent = Agent(
         llm_type="openai",
@@ -263,12 +264,24 @@ def main():
         },
         prompt="{query}"
     )
+
+    # Either model or multiple model
+
+    # Uniform 
     
     # Create a batch processing agent
     batch_agent = BatchProcessingAgent(
         base_agent=qa_agent,
         placeholder="{person}"
     )
+
+    # batch mode
+    
+    # Ouptut of the first agent is a list and then use this list to get another list using another agent
+
+    # Multiprocessing 
+
+
     
     # Process the batch of people
     print("Batch Processing Results:")
