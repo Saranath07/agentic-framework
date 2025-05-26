@@ -1,4 +1,8 @@
-from typing import Any, Dict, List, Optional, Type, Union
+from typing import Any, Dict, List, Optional, Type, Union, Tuple, Iterator
+import json
+import os
+import itertools
+from pathlib import Path
 
 from pydantic import BaseModel, Field
 
@@ -56,6 +60,9 @@ class Agent:
             elif parser_type.lower() == "yaml":
                 from .parsers.yaml_parser import YamlParser
                 self.parser = YamlParser()
+            elif parser_type.lower() == "list":
+                from .parsers.list_parser import ListParser
+                self.parser = ListParser()
             elif parser_type.lower() == "pydantic":
                 from .parsers.base_parser import PydanticParser
                 # Note: PydanticParser requires a model class, which should be provided separately
@@ -155,3 +162,171 @@ class Agent:
             response, and metadata
         """
         return self.conversation_history
+
+
+class BatchProcessingAgent:
+    """
+    Agent that processes a batch of items by substituting multiple placeholders in a prompt template.
+    Results can be saved to a jsonl file for further processing.
+    """
+    
+    def __init__(
+        self,
+        base_agent: Agent,
+        output_dir: str = "batch_results"
+    ):
+        """
+        Initialize a batch processing agent.
+        
+        Args:
+            base_agent: The base agent to use for processing each item
+            output_dir: Directory to save results (default: "batch_results")
+        """
+        self.base_agent = base_agent
+        self.output_dir = output_dir
+        self.results = {}
+        
+        # Create output directory if it doesn't exist
+        os.makedirs(output_dir, exist_ok=True)
+    
+    def process_batch(
+        self,
+        placeholder_dict: Dict[str, List[str]],
+        combination_method: str = "one_to_one"
+    ) -> Dict[str, Any]:
+        """
+        Process a batch of items using the base agent with multiple placeholders.
+        
+        Args:
+            placeholder_dict: Dictionary mapping placeholder names to lists of values
+            combination_method: Method to combine placeholders:
+                - "one_to_one": Match items at same index (requires all lists to be same length)
+                - "all_combinations": Generate all possible combinations of placeholder values
+            
+        Returns:
+            Dictionary mapping combination keys to their results
+        """
+        results = {}
+        combinations = self._generate_combinations(placeholder_dict, combination_method)
+        
+        for combo_values, combo_key in combinations:
+            # Process the prompt using the base agent with the placeholder values as kwargs
+            result = self.base_agent.invoke("", **combo_values)
+            
+            # Store the result
+            results[combo_key] = {
+                "input": combo_values,
+                "output": result
+            }
+        
+        self.results = results
+        return results
+    
+    def _generate_combinations(
+        self,
+        placeholder_dict: Dict[str, List[str]],
+        method: str
+    ) -> Iterator[Tuple[Dict[str, str], str]]:
+        """
+        Generate combinations of placeholder values based on the specified method.
+        
+        Args:
+            placeholder_dict: Dictionary mapping placeholder names to lists of values
+            method: Combination method ("one_to_one" or "all_combinations")
+            
+        Returns:
+            Iterator of (combination_dict, combination_key) tuples
+        """
+        if method == "one_to_one":
+            # Verify all lists have the same length
+            list_lengths = [len(values) for values in placeholder_dict.values()]
+            if len(set(list_lengths)) > 1:
+                raise ValueError("For one_to_one method, all placeholder lists must have the same length")
+            
+            # Generate one-to-one combinations
+            placeholders = list(placeholder_dict.keys())
+            for i in range(list_lengths[0]):
+                combo = {p: placeholder_dict[p][i] for p in placeholders}
+                # Create a key for this combination
+                combo_key = "_".join(f"{p}:{combo[p]}" for p in placeholders)
+                yield combo, combo_key
+                
+        elif method == "all_combinations":
+            # Generate all possible combinations
+            placeholders = list(placeholder_dict.keys())
+            placeholder_values = [placeholder_dict[p] for p in placeholders]
+            
+            for values in itertools.product(*placeholder_values):
+                combo = {placeholders[i]: values[i] for i in range(len(placeholders))}
+                # Create a key for this combination
+                combo_key = "_".join(f"{p}:{combo[p]}" for p in placeholders)
+                yield combo, combo_key
+        else:
+            raise ValueError(f"Unknown combination method: {method}")
+    
+    def save_results(self, filename: str = None) -> str:
+        """
+        Save the results to a JSONL file.
+        
+        Args:
+            filename: Name of the file to save results to (without extension)
+                     If None, a timestamp-based filename will be used
+        
+        Returns:
+            Path to the saved file
+        """
+        if not self.results:
+            raise ValueError("No results to save. Run process_batch first.")
+        
+        if filename is None:
+            import datetime
+            timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+            filename = f"batch_results_{timestamp}"
+        
+        # Ensure the filename has .jsonl extension
+        if not filename.endswith('.jsonl'):
+            filename += '.jsonl'
+        
+        filepath = os.path.join(self.output_dir, filename)
+        
+        with open(filepath, 'w') as f:
+            for combo_key, result_data in self.results.items():
+                # Convert the result to a serializable format
+                serializable_result = {
+                    "key": combo_key,
+                    "input": result_data["input"],
+                    "output": result_data["output"] if isinstance(result_data["output"], (str, int, float, bool, list, dict))
+                              else str(result_data["output"])
+                }
+                f.write(json.dumps(serializable_result) + '\n')
+        
+        return filepath
+    
+    def get_results(self) -> Dict[str, Any]:
+        """
+        Get the results of the batch processing.
+        
+        Returns:
+            Dictionary mapping combination keys to their results
+        """
+        return self.results
+    
+    def process_and_save(
+        self,
+        placeholder_dict: Dict[str, List[str]],
+        combination_method: str = "one_to_one",
+        filename: str = None
+    ) -> str:
+        """
+        Process a batch and save the results in one operation.
+        
+        Args:
+            placeholder_dict: Dictionary mapping placeholder names to lists of values
+            combination_method: Method to combine placeholders
+            filename: Name of the file to save results to (without extension)
+        
+        Returns:
+            Path to the saved file
+        """
+        self.process_batch(placeholder_dict, combination_method)
+        return self.save_results(filename)
