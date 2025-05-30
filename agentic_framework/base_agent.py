@@ -2,6 +2,7 @@ from typing import Any, Dict, List, Optional, Type, Union, Tuple, Iterator
 import json
 import os
 import itertools
+import concurrent.futures # asyncio along with concurrent features for parallel processing
 from pathlib import Path
 
 from pydantic import BaseModel, Field
@@ -164,6 +165,49 @@ class Agent:
         return self.conversation_history
 
 
+# Helper function for parallel processing - must be at module level for pickling
+def _process_combo(agent, combo_tuple):
+    """
+    Process a single combination using the agent.
+    
+    Args:
+        agent: The agent to use for processing
+        combo_tuple: A tuple of (combo_values, combo_key)
+        
+    Returns:
+        A tuple of (combo_key, result_data)
+    """
+    combo_values, combo_key = combo_tuple
+    # Create a new agent instance with the same parameters
+    # This is necessary because the original agent might not be picklable
+    model_args = {
+        "temperature": agent.llm.temperature,
+        "max_tokens": agent.llm.max_tokens,
+        "api_key": agent.llm.api_key,
+        "base_url": agent.llm.base_url
+    }
+    
+    new_agent = Agent(
+        llm_type=agent.llm.service_provider,
+        model=agent.llm.llm_model_name,
+        model_args=model_args,
+        prompt=agent.prompt_template,
+        system_prompt=agent.system_prompt
+    )
+    
+    # If there's a parser, set it up
+    if hasattr(agent, 'parser') and agent.parser is not None:
+        new_agent.parser = agent.parser
+    
+    # Process the prompt
+    result = new_agent.invoke("", **combo_values)
+    
+    return combo_key, {
+        "input": combo_values,
+        "output": result
+    }
+    
+
 class BatchProcessingAgent:
     """
     Agent that processes a batch of items by substituting multiple placeholders in a prompt template.
@@ -192,7 +236,9 @@ class BatchProcessingAgent:
     def process_batch(
         self,
         placeholder_dict: Dict[str, List[str]],
-        combination_method: str = "one_to_one"
+        combination_method: str = "one_to_one",
+        parallel: bool = False,
+        max_workers: int = None
     ) -> Dict[str, Any]:
         """
         Process a batch of items using the base agent with multiple placeholders.
@@ -202,24 +248,73 @@ class BatchProcessingAgent:
             combination_method: Method to combine placeholders:
                 - "one_to_one": Match items at same index (requires all lists to be same length)
                 - "all_combinations": Generate all possible combinations of placeholder values
+            parallel: Whether to process items in parallel using multiple processes
+            max_workers: Maximum number of worker processes to use (None = auto-determine)
             
         Returns:
             Dictionary mapping combination keys to their results
         """
         results = {}
-        combinations = self._generate_combinations(placeholder_dict, combination_method)
+        combinations = list(self._generate_combinations(placeholder_dict, combination_method))
         
-        for combo_values, combo_key in combinations:
-            # Process the prompt using the base agent with the placeholder values as kwargs
-            result = self.base_agent.invoke("", **combo_values)
-            
-            # Store the result
-            results[combo_key] = {
-                "input": combo_values,
-                "output": result
-            }
+        if parallel and len(combinations) > 1:
+            results = self._process_batch_parallel(combinations, max_workers)
+        else:
+            # Sequential processing
+            for combo_values, combo_key in combinations:
+                # Process the prompt using the base agent with the placeholder values as kwargs
+                result = self.base_agent.invoke("", **combo_values)
+                
+                # Store the result
+                results[combo_key] = {
+                    "input": combo_values,
+                    "output": result
+                }
         
         self.results = results
+        return results
+        
+    def _process_batch_parallel(
+        self,
+        combinations: List[Tuple[Dict[str, str], str]],
+        max_workers: int = None
+    ) -> Dict[str, Any]:
+        """
+        Process a batch of items in parallel using multiple processes.
+        
+        Args:
+            combinations: List of (combination_dict, combination_key) tuples
+            max_workers: Maximum number of worker processes to use
+            
+        Returns:
+            Dictionary mapping combination keys to their results
+        """
+        results = {}
+        
+        # Use ThreadPoolExecutor instead of ProcessPoolExecutor
+        # This avoids pickling issues while still providing concurrency
+        with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
+            # Submit all combinations to the executor
+            future_to_combo = {
+                executor.submit(lambda c: _process_combo(self.base_agent, c), combo): combo
+                for combo in combinations
+            }
+            
+            # Collect results as they complete
+            for future in concurrent.futures.as_completed(future_to_combo):
+                try:
+                    combo_key, result_data = future.result()
+                    results[combo_key] = result_data
+                except Exception as exc:
+                    combo = future_to_combo[future]
+                    print(f"Combination {combo[1]} generated an exception: {exc}")
+                    # Store the error in results
+                    results[combo[1]] = {
+                        "input": combo[0],
+                        "output": f"ERROR: {str(exc)}",
+                        "error": True
+                    }
+        
         return results
     
     def _generate_combinations(
@@ -315,7 +410,9 @@ class BatchProcessingAgent:
         self,
         placeholder_dict: Dict[str, List[str]],
         combination_method: str = "one_to_one",
-        filename: str = None
+        filename: str = None,
+        parallel: bool = False,
+        max_workers: int = None
     ) -> str:
         """
         Process a batch and save the results in one operation.
@@ -324,9 +421,11 @@ class BatchProcessingAgent:
             placeholder_dict: Dictionary mapping placeholder names to lists of values
             combination_method: Method to combine placeholders
             filename: Name of the file to save results to (without extension)
+            parallel: Whether to process items in parallel using multiple processes
+            max_workers: Maximum number of worker processes to use
         
         Returns:
             Path to the saved file
         """
-        self.process_batch(placeholder_dict, combination_method)
+        self.process_batch(placeholder_dict, combination_method, parallel, max_workers)
         return self.save_results(filename)

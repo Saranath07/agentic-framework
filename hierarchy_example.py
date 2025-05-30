@@ -7,35 +7,15 @@ def main():
     # Load environment variables
     load_dotenv()
     
-    print("Hierarchy Processor Example")
-    print("=" * 50)
     
-    # Example 1: Using the convenience function for domain-subdomain hierarchy
-    print("\nExample 1: Domain-Subdomain Hierarchy using convenience function")
-    print("-" * 50)
+  
     
-    domains = ["cricket", "football", "dance"]
-    
-    # Use the convenience function to create and process the hierarchy
-    results = create_domain_hierarchy(
-        domains=domains,
-        output_dir="hierarchy_results",
-        llm_type="openai",
-        model="meta-llama/Llama-3.3-70B-Instruct-Turbo",
-        model_args={
-            "temperature": 0.7,
-            "max_tokens": 200,
-            "api_key": os.getenv("DEEPINFRA_API_KEY"),
-            "base_url": "https://api.deepinfra.com/v1/openai"
-        }
+    # Create the hierarchy processor with parallel processing enabled
+    processor = HierarchyProcessor(
+        output_dir="outputs/hierarchy_results",
+        parallel_processing=True,  
+        max_workers=None  
     )
-    
-    # Example 2: Creating a custom 3-level hierarchy
-    print("\nExample 2: Custom 3-level hierarchy")
-    print("-" * 50)
-    
-    # Create the hierarchy processor
-    processor = HierarchyProcessor(output_dir="hierarchy_results/custom")
     
     # Define the levels
     category_level = HierarchyLevel(
@@ -54,7 +34,7 @@ def main():
             "api_key": os.getenv("DEEPINFRA_API_KEY"),
             "base_url": "https://api.deepinfra.com/v1/openai"
         },
-        input_key="category",  # Explicitly set the input key
+        input_key="category",  
         parser_type="list",
         output_format="list"
     )
@@ -75,7 +55,7 @@ def main():
             "api_key": os.getenv("DEEPINFRA_API_KEY"),
             "base_url": "https://api.deepinfra.com/v1/openai"
         },
-        input_key="product",  # Explicitly set the input key
+        input_key="product",  
         parser_type="list",
         output_format="list"
     )
@@ -93,7 +73,7 @@ def main():
             "api_key": os.getenv("DEEPINFRA_API_KEY"),
             "base_url": "https://api.deepinfra.com/v1/openai"
         },
-        input_key="feature",  # Explicitly set the input key
+        input_key="feature",  
         output_format="text"
     )
     
@@ -105,8 +85,14 @@ def main():
     # Process the hierarchy
     initial_data = {"category": ["smartphones", "laptops"]}
     custom_results = processor.process(initial_data)
-    
-    print("\nProcessing complete! Check the output directories for results.")
 
+
+    print(custom_results)
+    
+   
+   
+    
+    
+   
 if __name__ == "__main__":
     main()

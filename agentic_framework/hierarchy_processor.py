@@ -19,7 +19,8 @@ class HierarchyLevel:
         model: str = "meta-llama/Llama-3.3-70B-Instruct-Turbo",
         model_args: Optional[Dict[str, Any]] = None,
         parser_type: Optional[str] = None,
-        input_key: Optional[str] = None,
+        input_key: Optional[Union[str, List[str]]] = None,
+        input_mapping: Optional[Dict[str, str]] = None,
         output_format: str = "list",
     ):
         """
@@ -32,8 +33,11 @@ class HierarchyLevel:
             model: The specific model to use
             model_args: Additional arguments to pass to the LLM
             parser_type: The type of parser to use (e.g., "json", "list", "yaml")
-            input_key: The key to use for input values in the prompt template
+            input_key: The key(s) to use for input values in the prompt template
                       If None, uses the name of the parent level
+                      Can be a single string or a list of strings for multiple placeholders
+            input_mapping: Optional mapping from placeholder names to input keys
+                          For example: {"category": "product_category", "country": "market_region"}
             output_format: Format of the expected output ("list" or "text")
         """
         self.name = name
@@ -42,12 +46,24 @@ class HierarchyLevel:
         self.model = model
         self.model_args = model_args or {}
         self.parser_type = parser_type
-        self.input_key = input_key
+        
+        # Handle input keys
+        if isinstance(input_key, list):
+            self.input_keys = input_key
+        elif input_key is not None:
+            self.input_keys = [input_key]
+        else:
+            self.input_keys = []
+            
+        self.input_mapping = input_mapping or {}
         self.output_format = output_format
         
         # Will be set when added to a hierarchy
         self.parent = None
         self.children = []
+        
+        # Extract placeholders from the prompt
+        self._extract_placeholders()
         
     def create_agent(self) -> Agent:
         """
@@ -56,28 +72,68 @@ class HierarchyLevel:
         Returns:
             An Agent configured for this hierarchy level
         """
+        # We don't need to modify the prompt here since the Agent.invoke method
+        # will handle the formatting with the provided kwargs
         return Agent(
             llm_type=self.llm_type,
             model=self.model,
             model_args=self.model_args,
-            parser_type=self.parser_type if self.parser_type else 
+            parser_type=self.parser_type if self.parser_type else
                        "list" if self.output_format == "list" else None,
             prompt=self.prompt
         )
     
-    def get_input_key(self) -> str:
+    def _extract_placeholders(self) -> None:
         """
-        Get the input key for this level.
+        Extract placeholders from the prompt template.
+        """
+        import re
+        # Find all {placeholder} patterns in the prompt
+        placeholders = re.findall(r'\{([^}]+)\}', self.prompt)
+        
+        # Add any placeholders not already in input_keys
+        for placeholder in placeholders:
+            # Skip if this placeholder is already mapped
+            if placeholder in self.input_mapping:
+                continue
+                
+            # If not already in input_keys, add it
+            mapped_key = self.input_mapping.get(placeholder, placeholder)
+            if mapped_key not in self.input_keys:
+                self.input_keys.append(mapped_key)
+    
+    def get_input_keys(self) -> List[str]:
+        """
+        Get the input keys for this level.
         
         Returns:
-            The input key to use in the prompt template
+            The list of input keys to use in the prompt template
         """
-        if self.input_key:
-            return self.input_key
+        if self.input_keys:
+            return self.input_keys
         elif self.parent:
-            return self.parent.name
+            return [self.parent.name]
         else:
-            return self.name
+            return [self.name]
+    
+    def get_placeholder_mapping(self) -> Dict[str, str]:
+        """
+        Get the mapping from placeholders to input keys.
+        
+        Returns:
+            Dictionary mapping placeholder names to input keys
+        """
+        # Start with the explicit mapping
+        mapping = dict(self.input_mapping)
+        
+        # Add any placeholders that map to themselves
+        import re
+        placeholders = re.findall(r'\{([^}]+)\}', self.prompt)
+        for placeholder in placeholders:
+            if placeholder not in mapping:
+                mapping[placeholder] = placeholder
+                
+        return mapping
 
 
 class HierarchyProcessor:
@@ -88,7 +144,9 @@ class HierarchyProcessor:
     def __init__(
         self,
         output_dir: str = "hierarchy_results",
-        combine_results: bool = True
+        combine_results: bool = True,
+        parallel_processing: bool = False,
+        max_workers: int = None
     ):
         """
         Initialize a hierarchy processor.
@@ -96,9 +154,13 @@ class HierarchyProcessor:
         Args:
             output_dir: Directory to save results
             combine_results: Whether to combine results into a single hierarchical file
+            parallel_processing: Whether to process batches in parallel
+            max_workers: Maximum number of worker processes to use for parallel processing
         """
         self.output_dir = output_dir
         self.combine_results = combine_results
+        self.parallel_processing = parallel_processing
+        self.max_workers = max_workers
         self.levels = []
         self.results = {}
         
@@ -123,12 +185,12 @@ class HierarchyProcessor:
         self.levels.append(level)
         return level
     
-    def process(self, initial_data: Dict[str, List[Any]]) -> Dict[str, Any]:
+    def process(self, initial_data: Dict[str, List[Any]], combination_method="all_combinations") -> Dict[str, Any]:
         """
         Process the hierarchy using the provided initial data.
         
         Args:
-            initial_data: Dictionary mapping the top level input key to a list of values
+            initial_data: Dictionary mapping input keys to lists of values
             
         Returns:
             A hierarchical dictionary of results
@@ -152,14 +214,32 @@ class HierarchyProcessor:
             )
             
             # Process the batch
-            input_key = level.get_input_key()
-            if input_key not in current_data:
-                raise ValueError(f"Input key '{input_key}' not found in data")
-                
+            # Check if all required input keys are present
+            input_keys = level.get_input_keys()
+            primary_key = level.name
+            
+            # Ensure at least the primary key is present
+            if primary_key not in current_data:
+                raise ValueError(f"Primary input key '{primary_key}' not found in data")
+            
+            # Check for any missing required keys
+            missing_keys = [key for key in input_keys if key not in current_data]
+            if missing_keys:
+                print(f"Warning: The following input keys are missing: {missing_keys}")
+            
+            # Determine if we should use parallel processing
+            # Only use parallel processing if there are multiple items to process
+            use_parallel = self.parallel_processing and len(current_data.get(primary_key, [])) > 1
+            if use_parallel:
+                print(f"Processing {len(current_data.get(primary_key, []))} items in parallel")
+            
             filename = f"{level.name}_results"
             output_file = batch_agent.process_and_save(
                 current_data,
-                filename=filename
+                combination_method=combination_method,
+                filename=filename,
+                parallel=use_parallel,
+                max_workers=self.max_workers
             )
             
             print(f"Processed {len(batch_agent.get_results())} items")
@@ -205,7 +285,8 @@ class HierarchyProcessor:
             Data dictionary for the next level
         """
         next_data = {}
-        next_input_key = next_level.name  # Use the next level's name as the input key
+        next_input_keys = next_level.get_input_keys()
+        primary_key = next_level.name  # Use the level's name as the primary key
         all_values = []
         
         # Read the output file
@@ -236,8 +317,26 @@ class HierarchyProcessor:
                 # Add the values to the list
                 all_values.extend(values)
         
-        # Set the next level's input data
-        next_data[next_input_key] = all_values
+        # Set the next level's input data for the primary key
+        next_data[primary_key] = all_values
+        
+        # For any additional input keys, check if they're in the parent's input
+        # or if they should be passed through from the current level
+        for key in next_input_keys:
+            if key != primary_key and key not in next_data:
+                # If this is a key from the parent level, pass it through
+                if current_level.parent and key in current_level.parent.get_input_keys():
+                    # Find the value in the parent's input
+                    parent_file = os.path.join(self.output_dir, f"{current_level.parent.name}_results.jsonl")
+                    if os.path.exists(parent_file):
+                        with open(parent_file, "r") as f:
+                            for line in f:
+                                parent_data = json.loads(line)
+                                if key in parent_data["input"]:
+                                    # Use the first value we find
+                                    next_data[key] = [parent_data["input"][key]]
+                                    break
+        
         return next_data
     
     def _combine_results(self, level_results: Dict[str, Dict[str, Any]]) -> Dict[str, Any]:
@@ -305,8 +404,8 @@ class HierarchyProcessor:
                 data = json.loads(line)
                 
                 # Get the input value for this item
-                input_key = current_level.get_input_key()
-                input_value = data["input"].get(input_key)
+                primary_key = current_level.name
+                input_value = data["input"].get(primary_key)
                 
                 # Skip if this doesn't match the parent value (for child levels)
                 if parent_key and parent_value and input_value != parent_value:
@@ -415,7 +514,9 @@ def create_domain_hierarchy(
     output_dir: str = "domain_results",
     llm_type: str = "openai",
     model: str = "meta-llama/Llama-3.3-70B-Instruct-Turbo",
-    model_args: Optional[Dict[str, Any]] = None
+    model_args: Optional[Dict[str, Any]] = None,
+    parallel_processing: bool = False,
+    max_workers: int = None
 ) -> Dict[str, Any]:
     """
     Create a domain-subdomain-facts hierarchy using the provided domains.
@@ -431,7 +532,11 @@ def create_domain_hierarchy(
         A hierarchical dictionary of results
     """
     # Create the hierarchy processor
-    processor = HierarchyProcessor(output_dir=output_dir)
+    processor = HierarchyProcessor(
+        output_dir=output_dir,
+        parallel_processing=parallel_processing,
+        max_workers=max_workers
+    )
     
     # Define the domain level
     domain_level = HierarchyLevel(
