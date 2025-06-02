@@ -1,9 +1,9 @@
 import os
 from dotenv import load_dotenv
 
-from agentic_framework import HierarchyProcessor, HierarchyLevel, create_domain_hierarchy
+from agentic_framework.agents.hierarchy_agent import HierarchyProcessor, HierarchyLevel, create_domain_hierarchy
 
-def main():
+async def main():
     # Load environment variables
     load_dotenv()
     
@@ -84,7 +84,7 @@ def main():
     
     # Process the hierarchy
     initial_data = {"category": ["smartphones", "laptops"]}
-    custom_results = processor.process(initial_data)
+    custom_results = await processor.process(initial_data)
 
 
     print(custom_results)
@@ -95,4 +95,5 @@ def main():
     
    
 if __name__ == "__main__":
-    main()
+    import asyncio
+    asyncio.run(main())

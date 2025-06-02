@@ -2,13 +2,19 @@ from typing import Any, Dict, List, Optional, Type, Union, Tuple, Iterator
 import json
 import os
 import itertools
-import concurrent.futures # asyncio along with concurrent features for parallel processing
+import asyncio
+import logging
+import time
 from pathlib import Path
 
 from pydantic import BaseModel, Field
 
 from baseLLM import LLM, LLMResponse
-from .parsers.base_parser import BaseParser
+from ..parsers.base_parser import BaseParser
+
+# Set up logging for debugging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 
 class Agent:
@@ -56,16 +62,16 @@ class Agent:
         elif parser_type is not None:
             # Import parsers dynamically based on parser_type
             if parser_type.lower() == "json":
-                from .parsers.json_parser import JsonParser
+                from ..parsers.json_parser import JsonParser
                 self.parser = JsonParser()
             elif parser_type.lower() == "yaml":
-                from .parsers.yaml_parser import YamlParser
+                from ..parsers.yaml_parser import YamlParser
                 self.parser = YamlParser()
             elif parser_type.lower() == "list":
-                from .parsers.list_parser import ListParser
+                from ..parsers.list_parser import ListParser
                 self.parser = ListParser()
             elif parser_type.lower() == "pydantic":
-                from .parsers.base_parser import PydanticParser
+                from ..parsers.base_parser import PydanticParser
                 # Note: PydanticParser requires a model class, which should be provided separately
                 raise ValueError("PydanticParser requires a model class to be provided directly")
         
@@ -94,7 +100,7 @@ class Agent:
         prompt_vars = {"query": query, **kwargs}
         return self.prompt_template.format(**prompt_vars)
     
-    def invoke(self, query: str, **kwargs) -> Any:
+    async def invoke(self, query: str, **kwargs) -> Any:
         """
         Invoke the agent with a query and return the parsed response.
         
@@ -105,6 +111,9 @@ class Agent:
         Returns:
             The parsed response from the LLM
         """
+        logger.debug(f"Agent.invoke called - Task: {asyncio.current_task()}")
+        start_time = time.time()
+        
         # Format the prompt
         formatted_prompt = self.format_prompt(query, **kwargs)
         
@@ -114,8 +123,13 @@ class Agent:
             # you would need to handle system prompts according to the LLM's API
             formatted_prompt = f"{self.system_prompt}\n\n{formatted_prompt}"
         
-        # Invoke the LLM
-        response = self.llm.invoke(formatted_prompt)
+        # Invoke the LLM asynchronously - run in executor to avoid blocking
+        logger.debug(f"About to call LLM.invoke asynchronously")
+        loop = asyncio.get_event_loop()
+        response = await loop.run_in_executor(None, self.llm.invoke, formatted_prompt)
+        
+        elapsed_time = time.time() - start_time
+        logger.debug(f"LLM.invoke completed in {elapsed_time:.2f}s")
         
         # Store the conversation
         self.conversation_history.append({
@@ -136,7 +150,7 @@ class Agent:
         # Return the raw response if no parser is provided
         return response.content
     
-    def get_raw_response(self, query: str, **kwargs) -> LLMResponse:
+    async def get_raw_response(self, query: str, **kwargs) -> LLMResponse:
         """
         Get the raw LLM response without parsing.
         
@@ -152,7 +166,8 @@ class Agent:
         if self.system_prompt:
             formatted_prompt = f"{self.system_prompt}\n\n{formatted_prompt}"
         
-        return self.llm.invoke(formatted_prompt)
+        loop = asyncio.get_event_loop()
+        return await loop.run_in_executor(None, self.llm.invoke, formatted_prompt)
     
     def get_conversation_history(self) -> List[Dict[str, Any]]:
         """
@@ -165,10 +180,10 @@ class Agent:
         return self.conversation_history
 
 
-# Helper function for parallel processing - must be at module level for pickling
-def _process_combo(agent, combo_tuple):
+# Helper function for async parallel processing
+async def _process_combo_async(agent, combo_tuple):
     """
-    Process a single combination using the agent.
+    Process a single combination using the agent asynchronously.
     
     Args:
         agent: The agent to use for processing
@@ -179,7 +194,6 @@ def _process_combo(agent, combo_tuple):
     """
     combo_values, combo_key = combo_tuple
     # Create a new agent instance with the same parameters
-    # This is necessary because the original agent might not be picklable
     model_args = {
         "temperature": agent.llm.temperature,
         "max_tokens": agent.llm.max_tokens,
@@ -199,8 +213,8 @@ def _process_combo(agent, combo_tuple):
     if hasattr(agent, 'parser') and agent.parser is not None:
         new_agent.parser = agent.parser
     
-    # Process the prompt
-    result = new_agent.invoke("", **combo_values)
+    # Process the prompt asynchronously
+    result = await new_agent.invoke("", **combo_values)
     
     return combo_key, {
         "input": combo_values,
@@ -233,12 +247,12 @@ class BatchProcessingAgent:
         # Create output directory if it doesn't exist
         os.makedirs(output_dir, exist_ok=True)
     
-    def process_batch(
+    async def process_batch(
         self,
         placeholder_dict: Dict[str, List[str]],
         combination_method: str = "one_to_one",
         parallel: bool = False,
-        max_workers: int = None
+        max_concurrent: int = None
     ) -> Dict[str, Any]:
         """
         Process a batch of items using the base agent with multiple placeholders.
@@ -248,8 +262,8 @@ class BatchProcessingAgent:
             combination_method: Method to combine placeholders:
                 - "one_to_one": Match items at same index (requires all lists to be same length)
                 - "all_combinations": Generate all possible combinations of placeholder values
-            parallel: Whether to process items in parallel using multiple processes
-            max_workers: Maximum number of worker processes to use (None = auto-determine)
+            parallel: Whether to process items in parallel using asyncio tasks
+            max_concurrent: Maximum number of concurrent tasks to run (None = no limit)
             
         Returns:
             Dictionary mapping combination keys to their results
@@ -258,12 +272,12 @@ class BatchProcessingAgent:
         combinations = list(self._generate_combinations(placeholder_dict, combination_method))
         
         if parallel and len(combinations) > 1:
-            results = self._process_batch_parallel(combinations, max_workers)
+            results = await self._process_batch_async(combinations, max_concurrent)
         else:
             # Sequential processing
             for combo_values, combo_key in combinations:
                 # Process the prompt using the base agent with the placeholder values as kwargs
-                result = self.base_agent.invoke("", **combo_values)
+                result = await self.base_agent.invoke("", **combo_values)
                 
                 # Store the result
                 results[combo_key] = {
@@ -274,47 +288,86 @@ class BatchProcessingAgent:
         self.results = results
         return results
         
-    def _process_batch_parallel(
+    async def _process_batch_async(
         self,
         combinations: List[Tuple[Dict[str, str], str]],
-        max_workers: int = None
+        max_concurrent: int = None
     ) -> Dict[str, Any]:
         """
-        Process a batch of items in parallel using multiple processes.
+        Process a batch of items asynchronously using asyncio tasks.
         
         Args:
             combinations: List of (combination_dict, combination_key) tuples
-            max_workers: Maximum number of worker processes to use
+            max_concurrent: Maximum number of concurrent tasks to run
             
         Returns:
             Dictionary mapping combination keys to their results
         """
-        results = {}
+        logger.debug(f"Starting async processing with {len(combinations)} combinations")
+        logger.debug(f"Max concurrent: {max_concurrent}")
         
-        # Use ThreadPoolExecutor instead of ProcessPoolExecutor
-        # This avoids pickling issues while still providing concurrency
-        with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
-            # Submit all combinations to the executor
-            future_to_combo = {
-                executor.submit(lambda c: _process_combo(self.base_agent, c), combo): combo
+        results = {}
+        start_time = time.time()
+        
+        if max_concurrent is None:
+            # Process all combinations concurrently without limit
+            tasks = [
+                _process_combo_async(self.base_agent, combo)
                 for combo in combinations
-            }
+            ]
             
-            # Collect results as they complete
-            for future in concurrent.futures.as_completed(future_to_combo):
-                try:
-                    combo_key, result_data = future.result()
-                    results[combo_key] = result_data
-                except Exception as exc:
-                    combo = future_to_combo[future]
-                    print(f"Combination {combo[1]} generated an exception: {exc}")
-                    # Store the error in results
+            logger.debug(f"Created {len(tasks)} concurrent tasks")
+            
+            # Wait for all tasks to complete
+            completed_results = await asyncio.gather(*tasks, return_exceptions=True)
+            
+            # Process results
+            for i, result in enumerate(completed_results):
+                combo = combinations[i]
+                if isinstance(result, Exception):
+                    logger.error(f"Combination {combo[1]} generated an exception: {result}")
                     results[combo[1]] = {
                         "input": combo[0],
-                        "output": f"ERROR: {str(exc)}",
+                        "output": f"ERROR: {str(result)}",
                         "error": True
                     }
+                else:
+                    combo_key, result_data = result
+                    results[combo_key] = result_data
+        else:
+            # Use semaphore to limit concurrent tasks
+            semaphore = asyncio.Semaphore(max_concurrent)
+            
+            async def process_with_semaphore(combo):
+                async with semaphore:
+                    return await _process_combo_async(self.base_agent, combo)
+            
+            tasks = [
+                process_with_semaphore(combo)
+                for combo in combinations
+            ]
+            
+            logger.debug(f"Created {len(tasks)} tasks with max concurrent limit of {max_concurrent}")
+            
+            # Wait for all tasks to complete
+            completed_results = await asyncio.gather(*tasks, return_exceptions=True)
+            
+            # Process results
+            for i, result in enumerate(completed_results):
+                combo = combinations[i]
+                if isinstance(result, Exception):
+                    logger.error(f"Combination {combo[1]} generated an exception: {result}")
+                    results[combo[1]] = {
+                        "input": combo[0],
+                        "output": f"ERROR: {str(result)}",
+                        "error": True
+                    }
+                else:
+                    combo_key, result_data = result
+                    results[combo_key] = result_data
         
+        elapsed_time = time.time() - start_time
+        logger.debug(f"Async processing completed in {elapsed_time:.2f}s")
         return results
     
     def _generate_combinations(
@@ -406,13 +459,13 @@ class BatchProcessingAgent:
         """
         return self.results
     
-    def process_and_save(
+    async def process_and_save(
         self,
         placeholder_dict: Dict[str, List[str]],
         combination_method: str = "one_to_one",
         filename: str = None,
         parallel: bool = False,
-        max_workers: int = None
+        max_concurrent: int = None
     ) -> str:
         """
         Process a batch and save the results in one operation.
@@ -421,11 +474,11 @@ class BatchProcessingAgent:
             placeholder_dict: Dictionary mapping placeholder names to lists of values
             combination_method: Method to combine placeholders
             filename: Name of the file to save results to (without extension)
-            parallel: Whether to process items in parallel using multiple processes
-            max_workers: Maximum number of worker processes to use
+            parallel: Whether to process items in parallel using asyncio tasks
+            max_concurrent: Maximum number of concurrent tasks to run
         
         Returns:
             Path to the saved file
         """
-        self.process_batch(placeholder_dict, combination_method, parallel, max_workers)
+        await self.process_batch(placeholder_dict, combination_method, parallel, max_concurrent)
         return self.save_results(filename)

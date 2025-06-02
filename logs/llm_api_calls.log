@@ -1205,3 +1205,507 @@
 2025-05-30 12:13:37,548 - LLM_API - INFO - API Response: 1748587414_140306121281120 | Time: 2.91s | Tokens: 110 (P:30/C:80) | Cost: $0.00002210 | Status: Success
 2025-05-30 12:13:38,057 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
 2025-05-30 12:13:38,061 - LLM_API - INFO - API Response: 1748587414_140306121283760 | Time: 3.33s | Tokens: 125 (P:30/C:95) | Cost: $0.00002585 | Status: Success
+2025-06-01 19:47:52,047 - __main__ - INFO - Starting diagnostic tests...
+2025-06-01 19:47:52,048 - __main__ - INFO - === Testing Current Implementation ===
+2025-06-01 19:47:52,384 - __main__ - INFO - Testing single agent invocation...
+2025-06-01 19:47:52,385 - LLM_API - INFO - API Request: 1748787472_140068942996384 | Provider: openai | Model: gpt-3.5-turbo
+2025-06-01 19:47:55,125 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 404 Not Found"
+2025-06-01 19:47:55,133 - LLM_API - ERROR - API Error: 1748787472_140068942996384 | Time: 2.75s | Error: Error code: 404 - {'error': {'message': 'The model `gpt-3.5-turbo` does not exist', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}
+2025-06-01 19:47:55,133 - __main__ - INFO - Single invocation completed in 2.75s
+2025-06-01 19:47:55,133 - __main__ - INFO - Result: 
+2025-06-01 19:47:55,134 - __main__ - INFO - Testing batch processing...
+2025-06-01 19:47:55,134 - __main__ - INFO - Testing sequential processing...
+2025-06-01 19:47:55,134 - LLM_API - INFO - API Request: 1748787475_140068942996384 | Provider: openai | Model: gpt-3.5-turbo
+2025-06-01 19:47:55,402 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 404 Not Found"
+2025-06-01 19:47:55,403 - LLM_API - ERROR - API Error: 1748787475_140068942996384 | Time: 0.27s | Error: Error code: 404 - {'error': {'message': 'The model `gpt-3.5-turbo` does not exist', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}
+2025-06-01 19:47:55,404 - LLM_API - INFO - API Request: 1748787475_140068942996384 | Provider: openai | Model: gpt-3.5-turbo
+2025-06-01 19:47:55,671 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 404 Not Found"
+2025-06-01 19:47:55,675 - LLM_API - ERROR - API Error: 1748787475_140068942996384 | Time: 0.27s | Error: Error code: 404 - {'error': {'message': 'The model `gpt-3.5-turbo` does not exist', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}
+2025-06-01 19:47:55,681 - LLM_API - INFO - API Request: 1748787475_140068942996384 | Provider: openai | Model: gpt-3.5-turbo
+2025-06-01 19:47:56,046 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 404 Not Found"
+2025-06-01 19:47:56,047 - LLM_API - ERROR - API Error: 1748787475_140068942996384 | Time: 0.37s | Error: Error code: 404 - {'error': {'message': 'The model `gpt-3.5-turbo` does not exist', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}
+2025-06-01 19:47:56,048 - LLM_API - INFO - API Request: 1748787476_140068942996384 | Provider: openai | Model: gpt-3.5-turbo
+2025-06-01 19:47:56,357 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 404 Not Found"
+2025-06-01 19:47:56,359 - LLM_API - ERROR - API Error: 1748787476_140068942996384 | Time: 0.31s | Error: Error code: 404 - {'error': {'message': 'The model `gpt-3.5-turbo` does not exist', 'type': 'invalid_request_error', 'param': None, 'code': 'model_not_found'}}
+2025-06-01 19:47:56,360 - __main__ - INFO - Sequential processing completed in 1.23s
+2025-06-01 19:47:56,364 - __main__ - INFO - Testing parallel processing...
+2025-06-01 19:47:56,368 - agentic_framework.base_agent - ERROR - Combination name:Alice_greeting:Hi generated an exception: 2 validation errors for LLM
+api_key
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.10/v/string_type
+base_url
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.10/v/string_type
+2025-06-01 19:47:56,369 - agentic_framework.base_agent - ERROR - Combination name:Bob_greeting:Hello generated an exception: 2 validation errors for LLM
+api_key
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.10/v/string_type
+base_url
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.10/v/string_type
+2025-06-01 19:47:56,373 - agentic_framework.base_agent - ERROR - Combination name:Alice_greeting:Hello generated an exception: 2 validation errors for LLM
+api_key
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.10/v/string_type
+base_url
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.10/v/string_type
+2025-06-01 19:47:56,374 - agentic_framework.base_agent - ERROR - Combination name:Bob_greeting:Hi generated an exception: 2 validation errors for LLM
+api_key
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.10/v/string_type
+base_url
+  Input should be a valid string [type=string_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.10/v/string_type
+2025-06-01 19:47:56,376 - __main__ - INFO - Parallel processing completed in 0.01s
+2025-06-01 19:47:56,376 - __main__ - INFO - Speedup: 104.75x
+2025-06-01 19:47:56,380 - __main__ - INFO - === Testing Asyncio Compatibility ===
+2025-06-01 19:47:56,380 - __main__ - INFO - Running current implementation in asyncio event loop...
+2025-06-01 19:47:56,380 - __main__ - INFO - Current event loop: <_UnixSelectorEventLoop running=True closed=False debug=False>
+2025-06-01 19:47:56,481 - __main__ - INFO - Successfully running in asyncio context
+2025-06-01 19:47:56,481 - __main__ - INFO - Would call agent here, but skipping due to LLM requirements
+2025-06-01 19:47:56,481 - __main__ - INFO - === Diagnostic Summary ===
+2025-06-01 19:47:56,482 - __main__ - INFO - 1. Current implementation uses ThreadPoolExecutor for parallelism
+2025-06-01 19:47:56,482 - __main__ - INFO - 2. LLM calls are blocking (synchronous)
+2025-06-01 19:47:56,482 - __main__ - INFO - 3. To integrate asyncio, we need to:
+2025-06-01 19:47:56,482 - __main__ - INFO -    - Make LLM calls async or run them in executor
+2025-06-01 19:47:56,482 - __main__ - INFO -    - Coordinate ThreadPoolExecutor with asyncio event loop
+2025-06-01 19:47:56,482 - __main__ - INFO -    - Handle proper error propagation in async context
+2025-06-02 10:36:57,758 - LLM_API - INFO - API Request: 1748840817_140513132399904 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:36:57,804 - LLM_API - INFO - API Request: 1748840817_140513127354432 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:36:59,243 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:36:59,282 - LLM_API - INFO - API Response: 1748840817_140513132399904 | Time: 1.50s | Tokens: 80 (P:69/C:11) | Cost: $0.00000758 | Status: Success
+2025-06-02 10:36:59,754 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:36:59,756 - LLM_API - INFO - API Response: 1748840817_140513127354432 | Time: 1.95s | Tokens: 89 (P:69/C:20) | Cost: $0.00000983 | Status: Success
+2025-06-02 10:36:59,817 - LLM_API - INFO - API Request: 1748840819_140513132400064 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:36:59,859 - LLM_API - INFO - API Request: 1748840819_140513132399904 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:36:59,913 - LLM_API - INFO - API Request: 1748840819_140513127651104 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:36:59,945 - LLM_API - INFO - API Request: 1748840819_140513127984544 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:36:59,986 - LLM_API - INFO - API Request: 1748840819_140513127987424 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:37:00,044 - LLM_API - INFO - API Request: 1748840820_140513109001152 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:37:01,085 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:37:01,087 - LLM_API - INFO - API Response: 1748840819_140513132400064 | Time: 1.27s | Tokens: 78 (P:66/C:12) | Cost: $0.00000762 | Status: Success
+2025-06-02 10:37:01,209 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:37:01,215 - LLM_API - INFO - API Response: 1748840819_140513132399904 | Time: 1.35s | Tokens: 83 (P:67/C:16) | Cost: $0.00000869 | Status: Success
+2025-06-02 10:37:01,280 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:37:01,284 - LLM_API - INFO - API Response: 1748840819_140513127651104 | Time: 1.37s | Tokens: 84 (P:67/C:17) | Cost: $0.00000894 | Status: Success
+2025-06-02 10:37:01,414 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:37:01,416 - LLM_API - INFO - API Response: 1748840820_140513109001152 | Time: 1.37s | Tokens: 89 (P:70/C:19) | Cost: $0.00000965 | Status: Success
+2025-06-02 10:37:01,422 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:37:01,424 - LLM_API - INFO - API Response: 1748840819_140513127984544 | Time: 1.48s | Tokens: 82 (P:67/C:15) | Cost: $0.00000844 | Status: Success
+2025-06-02 10:37:01,789 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:37:01,790 - LLM_API - INFO - API Response: 1748840819_140513127987424 | Time: 1.80s | Tokens: 96 (P:70/C:26) | Cost: $0.00001140 | Status: Success
+2025-06-02 10:37:01,887 - LLM_API - INFO - API Request: 1748840821_140513127541776 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:37:01,939 - LLM_API - INFO - API Request: 1748840821_140513127541296 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:37:02,020 - LLM_API - INFO - API Request: 1748840822_140513127983984 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:37:02,089 - LLM_API - INFO - API Request: 1748840822_140513127651264 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:37:02,145 - LLM_API - INFO - API Request: 1748840822_140513109005232 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:37:02,190 - LLM_API - INFO - API Request: 1748840822_140513109004032 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:37:02,216 - LLM_API - INFO - API Request: 1748840822_140513109007712 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:37:02,254 - LLM_API - INFO - API Request: 1748840822_140513109009312 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:37:02,281 - LLM_API - INFO - API Request: 1748840822_140513109012512 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:37:02,310 - LLM_API - INFO - API Request: 1748840822_140513109015472 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:37:02,353 - LLM_API - INFO - API Request: 1748840822_140513109461424 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:37:02,416 - LLM_API - INFO - API Request: 1748840822_140513109466944 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:37:03,849 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:37:03,851 - LLM_API - INFO - API Response: 1748840822_140513127651264 | Time: 1.76s | Tokens: 58 (P:22/C:36) | Cost: $0.00001054 | Status: Success
+2025-06-02 10:37:03,852 - LLM_API - INFO - API Request: 1748840823_140513109471264 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:37:03,884 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:37:03,886 - LLM_API - INFO - API Response: 1748840821_140513127541296 | Time: 1.95s | Tokens: 61 (P:22/C:39) | Cost: $0.00001129 | Status: Success
+2025-06-02 10:37:03,887 - LLM_API - INFO - API Request: 1748840823_140513109474304 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:37:03,934 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:37:03,936 - LLM_API - INFO - API Response: 1748840822_140513109007712 | Time: 1.72s | Tokens: 60 (P:24/C:36) | Cost: $0.00001068 | Status: Success
+2025-06-02 10:37:03,937 - LLM_API - INFO - API Request: 1748840823_140513109722048 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:37:04,002 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:37:04,004 - LLM_API - INFO - API Response: 1748840822_140513109012512 | Time: 1.72s | Tokens: 58 (P:23/C:35) | Cost: $0.00001036 | Status: Success
+2025-06-02 10:37:04,005 - LLM_API - INFO - API Request: 1748840824_140513109724128 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:37:04,015 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:37:04,016 - LLM_API - INFO - API Response: 1748840822_140513127983984 | Time: 2.00s | Tokens: 65 (P:21/C:44) | Cost: $0.00001247 | Status: Success
+2025-06-02 10:37:04,020 - LLM_API - INFO - API Request: 1748840824_140513109726128 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:37:04,040 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:37:04,043 - LLM_API - INFO - API Response: 1748840822_140513109015472 | Time: 1.73s | Tokens: 59 (P:23/C:36) | Cost: $0.00001061 | Status: Success
+2025-06-02 10:37:04,049 - LLM_API - INFO - API Request: 1748840824_140513109728048 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:37:04,073 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:37:04,075 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:37:04,081 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:37:04,086 - LLM_API - INFO - API Response: 1748840821_140513127541776 | Time: 2.20s | Tokens: 67 (P:22/C:45) | Cost: $0.00001279 | Status: Success
+2025-06-02 10:37:04,094 - LLM_API - INFO - API Response: 1748840822_140513109004032 | Time: 1.90s | Tokens: 66 (P:23/C:43) | Cost: $0.00001236 | Status: Success
+2025-06-02 10:37:04,098 - LLM_API - INFO - API Response: 1748840822_140513109005232 | Time: 1.95s | Tokens: 63 (P:25/C:38) | Cost: $0.00001125 | Status: Success
+2025-06-02 10:37:04,150 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:37:04,154 - LLM_API - INFO - API Response: 1748840822_140513109009312 | Time: 1.90s | Tokens: 68 (P:24/C:44) | Cost: $0.00001268 | Status: Success
+2025-06-02 10:37:04,312 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:37:04,315 - LLM_API - INFO - API Response: 1748840822_140513109461424 | Time: 1.96s | Tokens: 64 (P:22/C:42) | Cost: $0.00001204 | Status: Success
+2025-06-02 10:37:04,426 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:37:04,429 - LLM_API - INFO - API Response: 1748840822_140513109466944 | Time: 2.01s | Tokens: 69 (P:24/C:45) | Cost: $0.00001293 | Status: Success
+2025-06-02 10:37:05,500 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:37:05,502 - LLM_API - INFO - API Response: 1748840823_140513109471264 | Time: 1.65s | Tokens: 56 (P:23/C:33) | Cost: $0.00000986 | Status: Success
+2025-06-02 10:37:05,695 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:37:05,707 - LLM_API - INFO - API Response: 1748840823_140513109722048 | Time: 1.77s | Tokens: 65 (P:26/C:39) | Cost: $0.00001157 | Status: Success
+2025-06-02 10:37:05,800 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:37:05,820 - LLM_API - INFO - API Response: 1748840823_140513109474304 | Time: 1.93s | Tokens: 79 (P:31/C:48) | Cost: $0.00001417 | Status: Success
+2025-06-02 10:37:05,828 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:37:05,836 - LLM_API - INFO - API Response: 1748840824_140513109726128 | Time: 1.82s | Tokens: 66 (P:23/C:43) | Cost: $0.00001236 | Status: Success
+2025-06-02 10:37:05,882 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:37:05,884 - LLM_API - INFO - API Response: 1748840824_140513109728048 | Time: 1.84s | Tokens: 71 (P:27/C:44) | Cost: $0.00001289 | Status: Success
+2025-06-02 10:37:05,910 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:37:05,917 - LLM_API - INFO - API Response: 1748840824_140513109724128 | Time: 1.91s | Tokens: 70 (P:23/C:47) | Cost: $0.00001336 | Status: Success
+2025-06-02 10:39:49,677 - LLM_API - INFO - API Request: 1748840989_140103076502480 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:39:52,252 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:39:52,277 - LLM_API - INFO - API Response: 1748840989_140103076502480 | Time: 2.59s | Tokens: 147 (P:75/C:72) | Cost: $0.00002325 | Status: Success
+2025-06-02 10:39:52,279 - LLM_API - INFO - API Request: 1748840992_140103076502480 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:39:54,449 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:39:54,451 - LLM_API - INFO - API Response: 1748840992_140103076502480 | Time: 2.17s | Tokens: 157 (P:75/C:82) | Cost: $0.00002575 | Status: Success
+2025-06-02 10:44:07,633 - LLM_API - INFO - API Request: 1748841247_140190063779808 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:44:10,453 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:44:10,477 - LLM_API - INFO - API Response: 1748841247_140190063779808 | Time: 2.83s | Tokens: 159 (P:75/C:84) | Cost: $0.00002625 | Status: Success
+2025-06-02 10:44:10,478 - LLM_API - INFO - API Request: 1748841250_140190063779808 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:44:12,602 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:44:12,604 - LLM_API - INFO - API Response: 1748841250_140190063779808 | Time: 2.13s | Tokens: 126 (P:75/C:51) | Cost: $0.00001800 | Status: Success
+2025-06-02 10:45:01,254 - LLM_API - INFO - API Request: 1748841301_140279950778336 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:45:04,360 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:45:04,386 - LLM_API - INFO - API Response: 1748841301_140279950778336 | Time: 3.12s | Tokens: 157 (P:75/C:82) | Cost: $0.00002575 | Status: Success
+2025-06-02 10:45:04,388 - LLM_API - INFO - API Request: 1748841304_140279950778336 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:45:07,101 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:45:07,103 - LLM_API - INFO - API Response: 1748841304_140279950778336 | Time: 2.71s | Tokens: 161 (P:75/C:86) | Cost: $0.00002675 | Status: Success
+2025-06-02 10:45:07,144 - LLM_API - INFO - API Request: 1748841307_140279946028896 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:45:07,169 - LLM_API - INFO - API Request: 1748841307_140279946261072 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:45:08,411 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:45:08,413 - LLM_API - INFO - API Response: 1748841307_140279946028896 | Time: 1.27s | Tokens: 82 (P:70/C:12) | Cost: $0.00000790 | Status: Success
+2025-06-02 10:45:08,425 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:45:08,426 - LLM_API - INFO - API Response: 1748841307_140279946261072 | Time: 1.26s | Tokens: 87 (P:71/C:16) | Cost: $0.00000897 | Status: Success
+2025-06-02 10:46:05,942 - LLM_API - INFO - API Request: 1748841365_140002150752224 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:46:09,750 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:46:09,773 - LLM_API - INFO - API Response: 1748841365_140002150752224 | Time: 3.82s | Tokens: 164 (P:75/C:89) | Cost: $0.00002750 | Status: Success
+2025-06-02 10:46:09,774 - LLM_API - INFO - API Request: 1748841369_140002150752224 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:46:11,491 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:46:11,493 - LLM_API - INFO - API Response: 1748841369_140002150752224 | Time: 1.72s | Tokens: 126 (P:75/C:51) | Cost: $0.00001800 | Status: Success
+2025-06-02 10:46:11,538 - LLM_API - INFO - API Request: 1748841371_140002146002864 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:46:11,566 - LLM_API - INFO - API Request: 1748841371_140002146002304 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:46:12,817 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:46:12,819 - LLM_API - INFO - API Response: 1748841371_140002146002864 | Time: 1.28s | Tokens: 82 (P:70/C:12) | Cost: $0.00000790 | Status: Success
+2025-06-02 10:46:13,128 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:46:13,130 - LLM_API - INFO - API Response: 1748841371_140002146002304 | Time: 1.56s | Tokens: 87 (P:71/C:16) | Cost: $0.00000897 | Status: Success
+2025-06-02 10:46:13,177 - LLM_API - INFO - API Request: 1748841373_140002146003584 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:46:13,201 - LLM_API - INFO - API Request: 1748841373_140002146531312 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:46:13,226 - LLM_API - INFO - API Request: 1748841373_140002146531232 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:46:16,377 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:46:16,379 - LLM_API - INFO - API Response: 1748841373_140002146531232 | Time: 3.15s | Tokens: 178 (P:118/C:60) | Cost: $0.00002326 | Status: Success
+2025-06-02 10:46:16,399 - LLM_API - INFO - API Request: 1748841376_140002146531232 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:46:16,574 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:46:16,576 - LLM_API - INFO - API Response: 1748841373_140002146531312 | Time: 3.37s | Tokens: 190 (P:119/C:71) | Cost: $0.00002608 | Status: Success
+2025-06-02 10:46:16,596 - LLM_API - INFO - API Request: 1748841376_140002146528592 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:46:19,165 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:46:19,166 - LLM_API - INFO - API Response: 1748841373_140002146003584 | Time: 5.99s | Tokens: 193 (P:119/C:74) | Cost: $0.00002683 | Status: Success
+2025-06-02 10:46:19,192 - LLM_API - INFO - API Request: 1748841379_140002146231840 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:46:19,301 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:46:19,302 - LLM_API - INFO - API Response: 1748841376_140002146528592 | Time: 2.71s | Tokens: 180 (P:120/C:60) | Cost: $0.00002340 | Status: Success
+2025-06-02 10:46:19,681 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:46:19,689 - LLM_API - INFO - API Response: 1748841376_140002146531232 | Time: 3.29s | Tokens: 196 (P:121/C:75) | Cost: $0.00002722 | Status: Success
+2025-06-02 10:46:22,037 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:46:22,039 - LLM_API - INFO - API Response: 1748841379_140002146231840 | Time: 2.85s | Tokens: 197 (P:121/C:76) | Cost: $0.00002747 | Status: Success
+2025-06-02 10:46:22,083 - LLM_API - INFO - API Request: 1748841382_140002146003264 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:46:22,113 - LLM_API - INFO - API Request: 1748841382_140002146002464 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:46:22,141 - LLM_API - INFO - API Request: 1748841382_140002146799280 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:46:23,984 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:46:23,985 - LLM_API - INFO - API Response: 1748841382_140002146799280 | Time: 1.84s | Tokens: 166 (P:127/C:39) | Cost: $0.00001864 | Status: Success
+2025-06-02 10:46:24,008 - LLM_API - INFO - API Request: 1748841384_140002146800400 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:46:24,360 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:46:24,362 - LLM_API - INFO - API Response: 1748841382_140002146003264 | Time: 2.28s | Tokens: 195 (P:141/C:54) | Cost: $0.00002337 | Status: Success
+2025-06-02 10:46:24,366 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:46:24,367 - LLM_API - INFO - API Response: 1748841382_140002146002464 | Time: 2.25s | Tokens: 188 (P:138/C:50) | Cost: $0.00002216 | Status: Success
+2025-06-02 10:46:24,392 - LLM_API - INFO - API Request: 1748841384_140002146003584 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:46:24,418 - LLM_API - INFO - API Request: 1748841384_140002146002464 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:46:26,306 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:46:26,308 - LLM_API - INFO - API Response: 1748841384_140002146800400 | Time: 2.30s | Tokens: 192 (P:141/C:51) | Cost: $0.00002262 | Status: Success
+2025-06-02 10:46:26,372 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:46:26,374 - LLM_API - INFO - API Response: 1748841384_140002146003584 | Time: 1.98s | Tokens: 165 (P:127/C:38) | Cost: $0.00001839 | Status: Success
+2025-06-02 10:46:27,177 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:46:27,179 - LLM_API - INFO - API Response: 1748841384_140002146002464 | Time: 2.76s | Tokens: 197 (P:143/C:54) | Cost: $0.00002351 | Status: Success
+2025-06-02 10:46:27,219 - LLM_API - INFO - API Request: 1748841387_140002146003264 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:46:27,242 - LLM_API - INFO - API Request: 1748841387_140002146531792 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:46:27,266 - LLM_API - INFO - API Request: 1748841387_140002146798880 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:46:30,946 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:46:30,948 - LLM_API - INFO - API Response: 1748841387_140002146798880 | Time: 3.68s | Tokens: 328 (P:210/C:118) | Cost: $0.00004420 | Status: Success
+2025-06-02 10:46:30,972 - LLM_API - INFO - API Request: 1748841390_140002146806960 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:46:31,253 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:46:31,259 - LLM_API - INFO - API Response: 1748841387_140002146531792 | Time: 4.02s | Tokens: 364 (P:232/C:132) | Cost: $0.00004924 | Status: Success
+2025-06-02 10:46:31,304 - LLM_API - INFO - API Request: 1748841391_140002146796320 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:46:31,747 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:46:31,749 - LLM_API - INFO - API Response: 1748841387_140002146003264 | Time: 4.53s | Tokens: 374 (P:238/C:136) | Cost: $0.00005066 | Status: Success
+2025-06-02 10:46:31,780 - LLM_API - INFO - API Request: 1748841391_140002146530992 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:46:35,323 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:46:35,324 - LLM_API - INFO - API Response: 1748841391_140002146796320 | Time: 4.02s | Tokens: 328 (P:208/C:120) | Cost: $0.00004456 | Status: Success
+2025-06-02 10:46:35,351 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:46:35,352 - LLM_API - INFO - API Response: 1748841390_140002146806960 | Time: 4.38s | Tokens: 367 (P:234/C:133) | Cost: $0.00004963 | Status: Success
+2025-06-02 10:46:36,003 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:46:36,011 - LLM_API - INFO - API Response: 1748841391_140002146530992 | Time: 4.23s | Tokens: 378 (P:242/C:136) | Cost: $0.00005094 | Status: Success
+2025-06-02 10:46:36,103 - LLM_API - INFO - API Request: 1748841396_140002146002784 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:46:36,158 - LLM_API - INFO - API Request: 1748841396_140002146532032 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:46:37,212 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:46:37,212 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:46:37,214 - LLM_API - INFO - API Response: 1748841396_140002146002784 | Time: 1.11s | Tokens: 78 (P:69/C:9) | Cost: $0.00000708 | Status: Success
+2025-06-02 10:46:37,216 - LLM_API - INFO - API Response: 1748841396_140002146532032 | Time: 1.06s | Tokens: 78 (P:69/C:9) | Cost: $0.00000708 | Status: Success
+2025-06-02 10:46:37,273 - LLM_API - INFO - API Request: 1748841397_140002146797120 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:46:37,298 - LLM_API - INFO - API Request: 1748841397_140002146805440 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:46:39,756 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:46:39,757 - LLM_API - INFO - API Response: 1748841397_140002146805440 | Time: 2.46s | Tokens: 151 (P:95/C:56) | Cost: $0.00002065 | Status: Success
+2025-06-02 10:46:39,780 - LLM_API - INFO - API Request: 1748841399_140002146805360 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:46:40,367 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:46:40,369 - LLM_API - INFO - API Response: 1748841397_140002146797120 | Time: 3.10s | Tokens: 188 (P:95/C:93) | Cost: $0.00002990 | Status: Success
+2025-06-02 10:46:40,390 - LLM_API - INFO - API Request: 1748841400_140002146797760 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:46:43,234 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:46:43,236 - LLM_API - INFO - API Response: 1748841400_140002146797760 | Time: 2.85s | Tokens: 171 (P:95/C:76) | Cost: $0.00002565 | Status: Success
+2025-06-02 10:46:43,259 - LLM_API - INFO - API Request: 1748841403_140002146809040 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:46:46,340 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:46:46,342 - LLM_API - INFO - API Response: 1748841403_140002146809040 | Time: 3.08s | Tokens: 173 (P:95/C:78) | Cost: $0.00002615 | Status: Success
+2025-06-02 10:46:46,364 - LLM_API - INFO - API Request: 1748841406_140002146809680 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:46:47,057 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:46:47,059 - LLM_API - INFO - API Response: 1748841399_140002146805360 | Time: 7.28s | Tokens: 188 (P:95/C:93) | Cost: $0.00002990 | Status: Success
+2025-06-02 10:46:50,198 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:46:50,199 - LLM_API - INFO - API Response: 1748841406_140002146809680 | Time: 3.84s | Tokens: 203 (P:95/C:108) | Cost: $0.00003365 | Status: Success
+2025-06-02 10:47:09,099 - LLM_API - INFO - API Request: 1748841429_139959131329856 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:47:11,258 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:47:11,292 - LLM_API - INFO - API Response: 1748841429_139959131329856 | Time: 2.17s | Tokens: 150 (P:99/C:51) | Cost: $0.00001968 | Status: Success
+2025-06-02 10:47:11,294 - LLM_API - INFO - API Request: 1748841431_139959131329856 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:47:12,848 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:47:12,849 - LLM_API - INFO - API Response: 1748841431_139959131329856 | Time: 1.55s | Tokens: 152 (P:100/C:52) | Cost: $0.00002000 | Status: Success
+2025-06-02 10:47:12,851 - LLM_API - INFO - API Request: 1748841432_139959131329856 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:47:14,377 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:47:14,378 - LLM_API - INFO - API Response: 1748841432_139959131329856 | Time: 1.53s | Tokens: 145 (P:98/C:47) | Cost: $0.00001861 | Status: Success
+2025-06-02 10:47:14,404 - LLM_API - INFO - API Request: 1748841434_139959131329856 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:47:16,422 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:47:16,424 - LLM_API - INFO - API Response: 1748841434_139959131329856 | Time: 2.02s | Tokens: 140 (P:93/C:47) | Cost: $0.00001826 | Status: Success
+2025-06-02 10:47:16,427 - LLM_API - INFO - API Request: 1748841436_139959131329856 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:47:17,923 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:47:17,925 - LLM_API - INFO - API Response: 1748841436_139959131329856 | Time: 1.50s | Tokens: 143 (P:93/C:50) | Cost: $0.00001901 | Status: Success
+2025-06-02 10:47:17,928 - LLM_API - INFO - API Request: 1748841437_139959131329856 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:47:19,382 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:47:19,383 - LLM_API - INFO - API Response: 1748841437_139959131329856 | Time: 1.46s | Tokens: 140 (P:93/C:47) | Cost: $0.00001826 | Status: Success
+2025-06-02 10:47:19,415 - LLM_API - INFO - API Request: 1748841439_139959131329856 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:47:22,146 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:47:22,148 - LLM_API - INFO - API Response: 1748841439_139959131329856 | Time: 2.73s | Tokens: 119 (P:77/C:42) | Cost: $0.00001589 | Status: Success
+2025-06-02 10:47:22,149 - LLM_API - INFO - API Request: 1748841442_139959131329856 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:47:23,068 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:47:23,070 - LLM_API - INFO - API Response: 1748841442_139959131329856 | Time: 0.92s | Tokens: 99 (P:77/C:22) | Cost: $0.00001089 | Status: Success
+2025-06-02 10:47:23,071 - LLM_API - INFO - API Request: 1748841443_139959131329856 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:47:24,092 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:47:24,094 - LLM_API - INFO - API Response: 1748841443_139959131329856 | Time: 1.02s | Tokens: 105 (P:77/C:28) | Cost: $0.00001239 | Status: Success
+2025-06-02 10:47:24,118 - LLM_API - INFO - API Request: 1748841444_139959131329856 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:47:27,532 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:47:27,534 - LLM_API - INFO - API Response: 1748841444_139959131329856 | Time: 3.42s | Tokens: 127 (P:90/C:37) | Cost: $0.00001555 | Status: Success
+2025-06-02 10:47:27,535 - LLM_API - INFO - API Request: 1748841447_139959131329856 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:47:29,314 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:47:29,316 - LLM_API - INFO - API Response: 1748841447_139959131329856 | Time: 1.78s | Tokens: 128 (P:90/C:38) | Cost: $0.00001580 | Status: Success
+2025-06-02 10:47:29,317 - LLM_API - INFO - API Request: 1748841449_139959131329856 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:47:30,638 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:47:30,640 - LLM_API - INFO - API Response: 1748841449_139959131329856 | Time: 1.32s | Tokens: 126 (P:90/C:36) | Cost: $0.00001530 | Status: Success
+2025-06-02 10:47:30,683 - LLM_API - INFO - API Request: 1748841450_139959126581136 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:47:30,712 - LLM_API - INFO - API Request: 1748841450_139959127127088 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:47:32,079 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:47:32,081 - LLM_API - INFO - API Response: 1748841450_139959127127088 | Time: 1.37s | Tokens: 80 (P:70/C:10) | Cost: $0.00000740 | Status: Success
+2025-06-02 10:47:32,086 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:47:32,087 - LLM_API - INFO - API Response: 1748841450_139959126581136 | Time: 1.40s | Tokens: 83 (P:70/C:13) | Cost: $0.00000815 | Status: Success
+2025-06-02 10:47:32,151 - LLM_API - INFO - API Request: 1748841452_139959126580976 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:47:32,177 - LLM_API - INFO - API Request: 1748841452_139959131329776 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:47:34,896 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:47:34,899 - LLM_API - INFO - API Response: 1748841452_139959131329776 | Time: 2.72s | Tokens: 173 (P:99/C:74) | Cost: $0.00002543 | Status: Success
+2025-06-02 10:47:34,931 - LLM_API - INFO - API Request: 1748841454_139959131329776 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:47:34,995 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:47:34,997 - LLM_API - INFO - API Response: 1748841452_139959126580976 | Time: 2.85s | Tokens: 173 (P:100/C:73) | Cost: $0.00002525 | Status: Success
+2025-06-02 10:47:35,028 - LLM_API - INFO - API Request: 1748841455_139959126581056 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:47:37,407 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:47:37,409 - LLM_API - INFO - API Response: 1748841455_139959126581056 | Time: 2.38s | Tokens: 153 (P:98/C:55) | Cost: $0.00002061 | Status: Success
+2025-06-02 10:47:37,435 - LLM_API - INFO - API Request: 1748841457_139959126580976 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:47:37,478 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:47:37,479 - LLM_API - INFO - API Response: 1748841454_139959131329776 | Time: 2.55s | Tokens: 161 (P:99/C:62) | Cost: $0.00002243 | Status: Success
+2025-06-02 10:47:37,502 - LLM_API - INFO - API Request: 1748841457_139959131329776 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:47:40,374 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:47:40,376 - LLM_API - INFO - API Response: 1748841457_139959126580976 | Time: 2.94s | Tokens: 172 (P:99/C:73) | Cost: $0.00002518 | Status: Success
+2025-06-02 10:47:40,387 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:47:40,389 - LLM_API - INFO - API Response: 1748841457_139959131329776 | Time: 2.89s | Tokens: 173 (P:98/C:75) | Cost: $0.00002561 | Status: Success
+2025-06-02 10:47:40,447 - LLM_API - INFO - API Request: 1748841460_139959127125568 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:47:40,475 - LLM_API - INFO - API Request: 1748841460_139959127126368 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:47:43,036 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:47:43,038 - LLM_API - INFO - API Response: 1748841460_139959127126368 | Time: 2.56s | Tokens: 169 (P:107/C:62) | Cost: $0.00002299 | Status: Success
+2025-06-02 10:47:43,060 - LLM_API - INFO - API Request: 1748841463_139959127126608 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:47:43,094 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:47:43,096 - LLM_API - INFO - API Response: 1748841460_139959127125568 | Time: 2.65s | Tokens: 169 (P:110/C:59) | Cost: $0.00002245 | Status: Success
+2025-06-02 10:47:43,121 - LLM_API - INFO - API Request: 1748841463_139959127125728 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:47:45,086 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:47:45,088 - LLM_API - INFO - API Response: 1748841463_139959127125728 | Time: 1.97s | Tokens: 131 (P:88/C:43) | Cost: $0.00001691 | Status: Success
+2025-06-02 10:47:45,115 - LLM_API - INFO - API Request: 1748841465_139959127125568 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:47:45,320 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:47:45,324 - LLM_API - INFO - API Response: 1748841463_139959127126608 | Time: 2.26s | Tokens: 149 (P:95/C:54) | Cost: $0.00002015 | Status: Success
+2025-06-02 10:47:45,367 - LLM_API - INFO - API Request: 1748841465_139959127128288 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 10:47:47,337 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:47:47,338 - LLM_API - INFO - API Response: 1748841465_139959127125568 | Time: 2.22s | Tokens: 159 (P:110/C:49) | Cost: $0.00001995 | Status: Success
+2025-06-02 10:47:47,645 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 10:47:47,647 - LLM_API - INFO - API Response: 1748841465_139959127128288 | Time: 2.28s | Tokens: 154 (P:108/C:46) | Cost: $0.00001906 | Status: Success
+2025-06-02 11:10:37,842 - LLM_API - INFO - API Request: 1748842837_140507427527072 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:10:40,655 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:10:40,683 - LLM_API - INFO - API Response: 1748842837_140507427527072 | Time: 2.82s | Tokens: 151 (P:99/C:52) | Cost: $0.00001993 | Status: Success
+2025-06-02 11:10:40,685 - LLM_API - INFO - API Request: 1748842840_140507427527072 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:10:42,380 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:10:42,382 - LLM_API - INFO - API Response: 1748842840_140507427527072 | Time: 1.70s | Tokens: 152 (P:100/C:52) | Cost: $0.00002000 | Status: Success
+2025-06-02 11:10:42,383 - LLM_API - INFO - API Request: 1748842842_140507427527072 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:10:44,164 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:10:44,165 - LLM_API - INFO - API Response: 1748842842_140507427527072 | Time: 1.78s | Tokens: 147 (P:98/C:49) | Cost: $0.00001911 | Status: Success
+2025-06-02 11:10:44,195 - LLM_API - INFO - API Request: 1748842844_140507427527072 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:10:46,475 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:10:46,477 - LLM_API - INFO - API Response: 1748842844_140507427527072 | Time: 2.28s | Tokens: 140 (P:93/C:47) | Cost: $0.00001826 | Status: Success
+2025-06-02 11:10:46,481 - LLM_API - INFO - API Request: 1748842846_140507427527072 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:10:48,171 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:10:48,172 - LLM_API - INFO - API Response: 1748842846_140507427527072 | Time: 1.69s | Tokens: 146 (P:93/C:53) | Cost: $0.00001976 | Status: Success
+2025-06-02 11:10:48,175 - LLM_API - INFO - API Request: 1748842848_140507427527072 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:10:49,956 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:10:49,958 - LLM_API - INFO - API Response: 1748842848_140507427527072 | Time: 1.78s | Tokens: 140 (P:93/C:47) | Cost: $0.00001826 | Status: Success
+2025-06-02 11:10:49,982 - LLM_API - INFO - API Request: 1748842849_140507422943232 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:10:52,131 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:10:52,133 - LLM_API - INFO - API Response: 1748842849_140507422943232 | Time: 2.15s | Tokens: 119 (P:77/C:42) | Cost: $0.00001589 | Status: Success
+2025-06-02 11:10:52,134 - LLM_API - INFO - API Request: 1748842852_140507422943232 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:10:53,032 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:10:53,034 - LLM_API - INFO - API Response: 1748842852_140507422943232 | Time: 0.90s | Tokens: 99 (P:77/C:22) | Cost: $0.00001089 | Status: Success
+2025-06-02 11:10:53,040 - LLM_API - INFO - API Request: 1748842853_140507422943232 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:10:53,928 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:10:53,930 - LLM_API - INFO - API Response: 1748842853_140507422943232 | Time: 0.89s | Tokens: 100 (P:77/C:23) | Cost: $0.00001114 | Status: Success
+2025-06-02 11:10:53,980 - LLM_API - INFO - API Request: 1748842853_140507422777312 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:10:57,903 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:10:57,905 - LLM_API - INFO - API Response: 1748842853_140507422777312 | Time: 3.92s | Tokens: 127 (P:90/C:37) | Cost: $0.00001555 | Status: Success
+2025-06-02 11:10:57,916 - LLM_API - INFO - API Request: 1748842857_140507422777312 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:10:59,691 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:10:59,693 - LLM_API - INFO - API Response: 1748842857_140507422777312 | Time: 1.78s | Tokens: 128 (P:90/C:38) | Cost: $0.00001580 | Status: Success
+2025-06-02 11:10:59,694 - LLM_API - INFO - API Request: 1748842859_140507422777312 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:11:01,334 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:11:01,335 - LLM_API - INFO - API Response: 1748842859_140507422777312 | Time: 1.64s | Tokens: 126 (P:90/C:36) | Cost: $0.00001530 | Status: Success
+2025-06-02 11:11:01,385 - LLM_API - INFO - API Request: 1748842861_140507422777872 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:11:01,414 - LLM_API - INFO - API Request: 1748842861_140507423320784 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:11:03,587 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:11:03,593 - LLM_API - INFO - API Response: 1748842861_140507423320784 | Time: 2.18s | Tokens: 80 (P:70/C:10) | Cost: $0.00000740 | Status: Success
+2025-06-02 11:11:03,594 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:11:03,599 - LLM_API - INFO - API Response: 1748842861_140507422777872 | Time: 2.21s | Tokens: 83 (P:70/C:13) | Cost: $0.00000815 | Status: Success
+2025-06-02 11:11:03,744 - LLM_API - INFO - API Request: 1748842863_140507423025792 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:11:03,778 - LLM_API - INFO - API Request: 1748842863_140507427526992 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:11:06,659 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:11:06,660 - LLM_API - INFO - API Response: 1748842863_140507427526992 | Time: 2.88s | Tokens: 169 (P:99/C:70) | Cost: $0.00002443 | Status: Success
+2025-06-02 11:11:06,680 - LLM_API - INFO - API Request: 1748842866_140507427526992 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:11:06,732 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:11:06,734 - LLM_API - INFO - API Response: 1748842863_140507423025792 | Time: 2.99s | Tokens: 173 (P:100/C:73) | Cost: $0.00002525 | Status: Success
+2025-06-02 11:11:06,753 - LLM_API - INFO - API Request: 1748842866_140507423256448 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:11:10,038 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:11:10,040 - LLM_API - INFO - API Response: 1748842866_140507427526992 | Time: 3.36s | Tokens: 161 (P:99/C:62) | Cost: $0.00002243 | Status: Success
+2025-06-02 11:11:10,060 - LLM_API - INFO - API Request: 1748842870_140507427526992 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:11:10,234 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:11:10,235 - LLM_API - INFO - API Response: 1748842866_140507423256448 | Time: 3.48s | Tokens: 153 (P:98/C:55) | Cost: $0.00002061 | Status: Success
+2025-06-02 11:11:10,254 - LLM_API - INFO - API Request: 1748842870_140507423256448 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:11:13,509 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:11:13,511 - LLM_API - INFO - API Response: 1748842870_140507423256448 | Time: 3.26s | Tokens: 153 (P:98/C:55) | Cost: $0.00002061 | Status: Success
+2025-06-02 11:11:14,021 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:11:14,022 - LLM_API - INFO - API Response: 1748842870_140507427526992 | Time: 3.96s | Tokens: 175 (P:99/C:76) | Cost: $0.00002593 | Status: Success
+2025-06-02 11:11:14,068 - LLM_API - INFO - API Request: 1748842874_140507423256448 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:11:14,094 - LLM_API - INFO - API Request: 1748842874_140507423323584 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:11:16,220 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:11:16,222 - LLM_API - INFO - API Response: 1748842874_140507423256448 | Time: 2.15s | Tokens: 159 (P:110/C:49) | Cost: $0.00001995 | Status: Success
+2025-06-02 11:11:16,249 - LLM_API - INFO - API Request: 1748842876_140507423324944 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:11:16,335 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:11:16,336 - LLM_API - INFO - API Response: 1748842874_140507423323584 | Time: 2.24s | Tokens: 155 (P:103/C:52) | Cost: $0.00002021 | Status: Success
+2025-06-02 11:11:16,358 - LLM_API - INFO - API Request: 1748842876_140507423321504 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:11:18,322 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:11:18,324 - LLM_API - INFO - API Response: 1748842876_140507423321504 | Time: 1.97s | Tokens: 131 (P:88/C:43) | Cost: $0.00001691 | Status: Success
+2025-06-02 11:11:18,348 - LLM_API - INFO - API Request: 1748842878_140507423322544 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:11:20,779 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:11:20,781 - LLM_API - INFO - API Response: 1748842878_140507423322544 | Time: 2.43s | Tokens: 164 (P:113/C:51) | Cost: $0.00002066 | Status: Success
+2025-06-02 11:11:20,803 - LLM_API - INFO - API Request: 1748842880_140507423321584 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:11:21,717 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:11:21,719 - LLM_API - INFO - API Response: 1748842876_140507423324944 | Time: 5.47s | Tokens: 158 (P:95/C:63) | Cost: $0.00002240 | Status: Success
+2025-06-02 11:11:22,751 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:11:22,753 - LLM_API - INFO - API Response: 1748842880_140507423321584 | Time: 1.95s | Tokens: 135 (P:92/C:43) | Cost: $0.00001719 | Status: Success
+2025-06-02 11:12:17,596 - LLM_API - INFO - API Request: 1748842937_140090887871680 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:12:21,299 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:12:21,322 - LLM_API - INFO - API Response: 1748842937_140090887871680 | Time: 3.71s | Tokens: 163 (P:75/C:88) | Cost: $0.00002725 | Status: Success
+2025-06-02 11:12:21,324 - LLM_API - INFO - API Request: 1748842941_140090887871680 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:12:23,039 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:12:23,041 - LLM_API - INFO - API Response: 1748842941_140090887871680 | Time: 1.72s | Tokens: 126 (P:75/C:51) | Cost: $0.00001800 | Status: Success
+2025-06-02 11:12:23,086 - LLM_API - INFO - API Request: 1748842943_140090883106736 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:12:23,113 - LLM_API - INFO - API Request: 1748842943_140090883355296 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:12:24,283 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:12:24,284 - LLM_API - INFO - API Response: 1748842943_140090883106736 | Time: 1.20s | Tokens: 82 (P:70/C:12) | Cost: $0.00000790 | Status: Success
+2025-06-02 11:12:24,365 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:12:24,367 - LLM_API - INFO - API Response: 1748842943_140090883355296 | Time: 1.25s | Tokens: 87 (P:71/C:16) | Cost: $0.00000897 | Status: Success
+2025-06-02 11:12:24,412 - LLM_API - INFO - API Request: 1748842944_140090883107216 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:12:24,439 - LLM_API - INFO - API Request: 1748842944_140090883651728 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:12:24,466 - LLM_API - INFO - API Request: 1748842944_140090883648928 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:12:26,828 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:12:26,829 - LLM_API - INFO - API Response: 1748842944_140090883107216 | Time: 2.42s | Tokens: 177 (P:119/C:58) | Cost: $0.00002283 | Status: Success
+2025-06-02 11:12:26,850 - LLM_API - INFO - API Request: 1748842946_140090883106656 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:12:27,031 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:12:27,033 - LLM_API - INFO - API Response: 1748842944_140090883651728 | Time: 2.59s | Tokens: 190 (P:119/C:71) | Cost: $0.00002608 | Status: Success
+2025-06-02 11:12:27,053 - LLM_API - INFO - API Request: 1748842947_140090883651328 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:12:27,220 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:12:27,222 - LLM_API - INFO - API Response: 1748842944_140090883648928 | Time: 2.76s | Tokens: 193 (P:118/C:75) | Cost: $0.00002701 | Status: Success
+2025-06-02 11:12:27,252 - LLM_API - INFO - API Request: 1748842947_140090883352176 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:12:29,439 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:12:29,441 - LLM_API - INFO - API Response: 1748842946_140090883106656 | Time: 2.59s | Tokens: 192 (P:121/C:71) | Cost: $0.00002622 | Status: Success
+2025-06-02 11:12:29,528 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:12:29,530 - LLM_API - INFO - API Response: 1748842947_140090883651328 | Time: 2.48s | Tokens: 186 (P:120/C:66) | Cost: $0.00002490 | Status: Success
+2025-06-02 11:12:29,900 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:12:29,902 - LLM_API - INFO - API Response: 1748842947_140090883352176 | Time: 2.65s | Tokens: 192 (P:121/C:71) | Cost: $0.00002622 | Status: Success
+2025-06-02 11:12:29,946 - LLM_API - INFO - API Request: 1748842949_140090883355296 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:12:29,978 - LLM_API - INFO - API Request: 1748842949_140090883355536 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:12:30,009 - LLM_API - INFO - API Request: 1748842950_140090864635088 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:12:32,050 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:12:32,052 - LLM_API - INFO - API Response: 1748842949_140090883355296 | Time: 2.11s | Tokens: 162 (P:125/C:37) | Cost: $0.00001800 | Status: Success
+2025-06-02 11:12:32,073 - LLM_API - INFO - API Request: 1748842952_140090883354896 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:12:32,358 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:12:32,360 - LLM_API - INFO - API Response: 1748842949_140090883355536 | Time: 2.38s | Tokens: 188 (P:138/C:50) | Cost: $0.00002216 | Status: Success
+2025-06-02 11:12:32,381 - LLM_API - INFO - API Request: 1748842952_140090883355536 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:12:32,451 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:12:32,452 - LLM_API - INFO - API Response: 1748842950_140090864635088 | Time: 2.44s | Tokens: 197 (P:142/C:55) | Cost: $0.00002369 | Status: Success
+2025-06-02 11:12:32,472 - LLM_API - INFO - API Request: 1748842952_140090864634368 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:12:34,204 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:12:34,205 - LLM_API - INFO - API Response: 1748842952_140090883354896 | Time: 2.13s | Tokens: 186 (P:138/C:48) | Cost: $0.00002166 | Status: Success
+2025-06-02 11:12:34,405 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:12:34,406 - LLM_API - INFO - API Response: 1748842952_140090883355536 | Time: 2.03s | Tokens: 176 (P:133/C:43) | Cost: $0.00002006 | Status: Success
+2025-06-02 11:12:35,204 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:12:35,206 - LLM_API - INFO - API Response: 1748842952_140090864634368 | Time: 2.73s | Tokens: 187 (P:138/C:49) | Cost: $0.00002191 | Status: Success
+2025-06-02 11:12:35,251 - LLM_API - INFO - API Request: 1748842955_140090883602336 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:12:35,275 - LLM_API - INFO - API Request: 1748842955_140090883106816 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:12:35,299 - LLM_API - INFO - API Request: 1748842955_140090864633088 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:12:39,526 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:12:39,528 - LLM_API - INFO - API Response: 1748842955_140090883602336 | Time: 4.28s | Tokens: 322 (P:206/C:116) | Cost: $0.00004342 | Status: Success
+2025-06-02 11:12:39,564 - LLM_API - INFO - API Request: 1748842959_140090883107216 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:12:39,903 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:12:39,905 - LLM_API - INFO - API Response: 1748842955_140090864633088 | Time: 4.61s | Tokens: 373 (P:240/C:133) | Cost: $0.00005005 | Status: Success
+2025-06-02 11:12:39,929 - LLM_API - INFO - API Request: 1748842959_140090864640608 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:12:41,062 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:12:41,063 - LLM_API - INFO - API Response: 1748842955_140090883106816 | Time: 5.79s | Tokens: 364 (P:232/C:132) | Cost: $0.00004924 | Status: Success
+2025-06-02 11:12:41,087 - LLM_API - INFO - API Request: 1748842961_140090864634768 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:12:44,031 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:12:44,033 - LLM_API - INFO - API Response: 1748842959_140090883107216 | Time: 4.47s | Tokens: 358 (P:228/C:130) | Cost: $0.00004846 | Status: Success
+2025-06-02 11:12:44,236 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:12:44,237 - LLM_API - INFO - API Response: 1748842959_140090864640608 | Time: 4.31s | Tokens: 345 (P:220/C:125) | Cost: $0.00004665 | Status: Success
+2025-06-02 11:12:45,772 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:12:45,774 - LLM_API - INFO - API Response: 1748842961_140090864634768 | Time: 4.69s | Tokens: 361 (P:230/C:131) | Cost: $0.00004885 | Status: Success
+2025-06-02 11:12:45,829 - LLM_API - INFO - API Request: 1748842965_140090883355296 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:12:45,870 - LLM_API - INFO - API Request: 1748842965_140090864647488 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:12:46,980 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:12:46,980 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:12:46,982 - LLM_API - INFO - API Response: 1748842965_140090864647488 | Time: 1.11s | Tokens: 78 (P:69/C:9) | Cost: $0.00000708 | Status: Success
+2025-06-02 11:12:46,983 - LLM_API - INFO - API Response: 1748842965_140090883355296 | Time: 1.15s | Tokens: 78 (P:69/C:9) | Cost: $0.00000708 | Status: Success
+2025-06-02 11:12:47,047 - LLM_API - INFO - API Request: 1748842967_140090864647808 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:12:47,078 - LLM_API - INFO - API Request: 1748842967_140090864632848 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:12:49,476 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:12:49,478 - LLM_API - INFO - API Response: 1748842967_140090864632848 | Time: 2.40s | Tokens: 151 (P:95/C:56) | Cost: $0.00002065 | Status: Success
+2025-06-02 11:12:49,503 - LLM_API - INFO - API Request: 1748842969_140090864643328 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:12:50,533 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:12:50,534 - LLM_API - INFO - API Response: 1748842967_140090864647808 | Time: 3.49s | Tokens: 202 (P:95/C:107) | Cost: $0.00003340 | Status: Success
+2025-06-02 11:12:50,556 - LLM_API - INFO - API Request: 1748842970_140090864632768 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:12:52,838 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:12:52,840 - LLM_API - INFO - API Response: 1748842969_140090864643328 | Time: 3.34s | Tokens: 201 (P:95/C:106) | Cost: $0.00003315 | Status: Success
+2025-06-02 11:12:52,868 - LLM_API - INFO - API Request: 1748842972_140090864639648 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:12:53,285 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:12:53,287 - LLM_API - INFO - API Response: 1748842970_140090864632768 | Time: 2.73s | Tokens: 175 (P:95/C:80) | Cost: $0.00002665 | Status: Success
+2025-06-02 11:12:53,306 - LLM_API - INFO - API Request: 1748842973_140090864640688 | Provider: openai | Model: meta-llama/Llama-3.3-70B-Instruct-Turbo
+2025-06-02 11:12:55,398 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:12:55,399 - LLM_API - INFO - API Response: 1748842972_140090864639648 | Time: 2.53s | Tokens: 160 (P:95/C:65) | Cost: $0.00002290 | Status: Success
+2025-06-02 11:12:56,720 - httpx - INFO - HTTP Request: POST https://api.deepinfra.com/v1/openai/chat/completions "HTTP/1.1 200 OK"
+2025-06-02 11:12:56,722 - LLM_API - INFO - API Response: 1748842973_140090864640688 | Time: 3.42s | Tokens: 198 (P:95/C:103) | Cost: $0.00003240 | Status: Success

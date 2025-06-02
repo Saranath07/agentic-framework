@@ -1,7 +1,6 @@
-from .base_agent import Agent, BatchProcessingAgent
+from .agents import Agent, BatchProcessingAgent, HierarchyProcessor, HierarchyLevel, create_domain_hierarchy
 from baseLLM import LLM, LLMResponse, LLMMetadata
 from .parsers import BaseParser, PydanticParser, JsonParser, YamlParser, ListParser
-from .hierarchy_processor import HierarchyProcessor, HierarchyLevel, create_domain_hierarchy
 
 __all__ = [
     'Agent',

@@ -19,6 +19,7 @@ class HierarchyLevel:
         model: str = "meta-llama/Llama-3.3-70B-Instruct-Turbo",
         model_args: Optional[Dict[str, Any]] = None,
         parser_type: Optional[str] = None,
+        parser: Optional[Any] = None,
         input_key: Optional[Union[str, List[str]]] = None,
         input_mapping: Optional[Dict[str, str]] = None,
         output_format: str = "list",
@@ -33,6 +34,7 @@ class HierarchyLevel:
             model: The specific model to use
             model_args: Additional arguments to pass to the LLM
             parser_type: The type of parser to use (e.g., "json", "list", "yaml")
+            parser: Custom parser instance to use instead of parser_type
             input_key: The key(s) to use for input values in the prompt template
                       If None, uses the name of the parent level
                       Can be a single string or a list of strings for multiple placeholders
@@ -46,6 +48,7 @@ class HierarchyLevel:
         self.model = model
         self.model_args = model_args or {}
         self.parser_type = parser_type
+        self.parser = parser
         
         # Handle input keys
         if isinstance(input_key, list):
@@ -74,14 +77,25 @@ class HierarchyLevel:
         """
         # We don't need to modify the prompt here since the Agent.invoke method
         # will handle the formatting with the provided kwargs
-        return Agent(
-            llm_type=self.llm_type,
-            model=self.model,
-            model_args=self.model_args,
-            parser_type=self.parser_type if self.parser_type else
-                       "list" if self.output_format == "list" else None,
-            prompt=self.prompt
-        )
+        
+        # Use custom parser if provided, otherwise use parser_type
+        if self.parser is not None:
+            return Agent(
+                llm_type=self.llm_type,
+                model=self.model,
+                model_args=self.model_args,
+                parser=self.parser,
+                prompt=self.prompt
+            )
+        else:
+            return Agent(
+                llm_type=self.llm_type,
+                model=self.model,
+                model_args=self.model_args,
+                parser_type=self.parser_type if self.parser_type else
+                           "list" if self.output_format == "list" else None,
+                prompt=self.prompt
+            )
     
     def _extract_placeholders(self) -> None:
         """
@@ -185,7 +199,7 @@ class HierarchyProcessor:
         self.levels.append(level)
         return level
     
-    def process(self, initial_data: Dict[str, List[Any]], combination_method="all_combinations") -> Dict[str, Any]:
+    async def process(self, initial_data: Dict[str, List[Any]], combination_method="all_combinations") -> Dict[str, Any]:
         """
         Process the hierarchy using the provided initial data.
         
@@ -216,7 +230,7 @@ class HierarchyProcessor:
             # Process the batch
             # Check if all required input keys are present
             input_keys = level.get_input_keys()
-            primary_key = level.name
+            primary_key = input_keys[0] if input_keys else level.name
             
             # Ensure at least the primary key is present
             if primary_key not in current_data:
@@ -234,12 +248,12 @@ class HierarchyProcessor:
                 print(f"Processing {len(current_data.get(primary_key, []))} items in parallel")
             
             filename = f"{level.name}_results"
-            output_file = batch_agent.process_and_save(
+            output_file = await batch_agent.process_and_save(
                 current_data,
                 combination_method=combination_method,
                 filename=filename,
                 parallel=use_parallel,
-                max_workers=self.max_workers
+                max_concurrent=self.max_workers if self.max_workers else None
             )
             
             print(f"Processed {len(batch_agent.get_results())} items")
@@ -286,7 +300,7 @@ class HierarchyProcessor:
         """
         next_data = {}
         next_input_keys = next_level.get_input_keys()
-        primary_key = next_level.name  # Use the level's name as the primary key
+        primary_key = next_input_keys[0] if next_input_keys else next_level.name
         all_values = []
         
         # Read the output file
@@ -404,7 +418,8 @@ class HierarchyProcessor:
                 data = json.loads(line)
                 
                 # Get the input value for this item
-                primary_key = current_level.name
+                input_keys = current_level.get_input_keys()
+                primary_key = input_keys[0] if input_keys else current_level.name
                 input_value = data["input"].get(primary_key)
                 
                 # Skip if this doesn't match the parent value (for child levels)
